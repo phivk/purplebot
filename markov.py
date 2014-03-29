@@ -1,3 +1,4 @@
+# coding: utf-8
 '''
 Markov class to generate new text from corpus
 
@@ -25,10 +26,10 @@ class Markov(object):
 		starting_words = self.model.generate(100)[-2:]
 		starting_words = ['we', 'believe']
 		content = self.model.generate(size, starting_words)
-		return ' '.join(content)
+		return self.ensure_ending(' '.join(content))
 
 	def ensure_ending(self, text):
-		'''Ensure nicer sentence ending'''
+		'''Ensure text has sentence ending'''
 		if "!" in text:
 			return text[:text.index(".")+1]
 		elif "?" in text:
@@ -38,12 +39,19 @@ class Markov(object):
 		else:
 			return self.ensure_ending(self.generate_text())
 
+	def ensure_tweet_length(self, text):
+		'''Ensure text is within tweet length'''
+		if len(text) <= 140:
+			return text
+		else:
+			return self.ensure_ending(self.generate_text())
+
 def main():
 	fileRepu = open('./data/corpora/republican.txt', 'rb')
 	print "now generating RepubliCrat tweet..."
 	myMarkov = Markov(fileRepu,3)
 	genText = myMarkov.generate_text()
-	finalText = myMarkov.ensure_ending(genText)
+	finalText = myMarkov.ensure_tweet_length(genText)
 
 	print "\n*****\n"
 	print finalText
