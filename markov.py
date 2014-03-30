@@ -48,13 +48,18 @@ class Markov(object):
 			return self.ensure_tweet_length(' '.join(self.generate_text()))
 
 def main():
-	rawText = open('./data/corpora/republican.txt', 'rb').read()
+	rawText1 = open('./data/corpora/republican.txt', 'rb').read()
+	rawText2 = open('./data/corpora/democrat.txt', 'rb').read()
+
+	# combine texts by summing equal parts
+	minLength = min(len(rawText1), len(rawText2))
+	combinedText = rawText1[:minLength] + rawText2[:minLength]
+
 	print "now generating RepubliCrat tweet..."
-	myMarkov = Markov(rawText,3)
+	myMarkov = Markov(combinedText,3)
 	genText = myMarkov.generate_text()
 	sentence = ' '.join(genText)
 	finalText = myMarkov.ensure_tweet_length(sentence)
-
 
 	print "\n*****\n"
 	print finalText
