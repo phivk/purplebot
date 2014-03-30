@@ -6,7 +6,6 @@ API_SECRET = 'xteLnU2uu3KEKxZx8hc1wfPic0gs5JvosmRP9VBA6c'
 ACCESS_TOKEN = '2417467056-2aZr2bQSGaDcRnbqR7QAHC95TXXSPbyQr2jONYa'
 ACCESS_TOKEN_SECRET = 'LBKmR3OXxVFiLEM9zeiYNe0tKwUyiFdfmz27ts36AuhHW'
 
-twitter = Twython(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 
 def main():
 	rawText1 = open('./data/corpora/republican.txt', 'rb').read()
@@ -26,6 +25,7 @@ def main():
 	print finalText
 	print "\n*****\n"
 
+	twitter = Twython(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 	twitter.update_status(status=finalText)
 
 if __name__ == '__main__':
