@@ -1,6 +1,9 @@
 import urllib
 import simplejson as json
 
+
+
+
 apiKey = 'AIzaSyD-mnJ5Gff-xJDpEU78Pc5iXLbMHmK4FPA'
 url = 'https://www.googleapis.com/freebase/v1/search?'
 
