@@ -1,5 +1,6 @@
 import urllib
 import simplejson as json
+from twitter import *
 
 apiKey = 'AIzaSyD-mnJ5Gff-xJDpEU78Pc5iXLbMHmK4FPA'
 url = 'https://www.googleapis.com/freebase/v1/search?'
