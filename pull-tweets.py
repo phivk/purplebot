@@ -26,7 +26,7 @@ def main():
 	apiKey = 'AIzaSyD-mnJ5Gff-xJDpEU78Pc5iXLbMHmK4FPA'
 	url = 'https://www.googleapis.com/freebase/v1/search?'
 
-	handles = {'republican':[], 'democrat':[]}
+	handles = {'republican':[], 'democratic':[]}
 	for party in handles.keys():
 		parameters = { 
 			'filter': '(all type:politician member_of:' + party + ')',
