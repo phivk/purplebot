@@ -41,7 +41,7 @@ class MarkovBot(object):
 
 	def ensure_tweet_length(self, text):
 		'''Ensure text is within tweet length'''
-		if len(text) <= 140:
+		if len(text) <= 140 and len(text) > 10:
 			return text
 		else:
 			return self.ensure_tweet_length(' '.join(self.generate_text()))
