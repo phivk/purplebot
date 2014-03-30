@@ -1,3 +1,4 @@
+# coding: utf-8
 '''
 Markov class to generate new text from corpus
 
@@ -10,23 +11,51 @@ import nltk
 
 class Markov(object):
 	'''Markov class to generate new text from corpus'''
-	def __init__(self, open_file):
+	def __init__(self, open_file, n):
 		self.open_file = open_file
 		self.tokens = self.file_to_tokens()
-		self.text = nltk.Text(self.tokens)
-	
+		self.n = n
+		self.model = nltk.NgramModel(self.n, self.tokens)
+
 	def file_to_tokens(self):
 		raw = self.open_file.read()
 		return nltk.word_tokenize(raw)
 	
-	def generate_text(self, size=15):
-		return self.text.generate(size)
+	def generate_text(self, size=20):
+		# return self.text.generate(size)
+		starting_words = self.model.generate(100)[-2:]
+		starting_words = ['we', 'believe']
+		content = self.model.generate(size, starting_words)
+		return self.ensure_ending(' '.join(content))
+
+	def ensure_ending(self, text):
+		'''Ensure text has sentence ending'''
+		if "!" in text:
+			return text[:text.index(".")+1]
+		elif "?" in text:
+			return text[:text.index(".")+1]
+		elif "." in text:
+			return text[:text.index(".")+1]
+		else:
+			return self.ensure_ending(self.generate_text())
+
+	def ensure_tweet_length(self, text):
+		'''Ensure text is within tweet length'''
+		if len(text) <= 140:
+			return text
+		else:
+			return self.ensure_ending(self.generate_text())
 
 def main():
 	fileRepu = open('./data/corpora/republican.txt', 'rb')
-	myMarkov = Markov(fileRepu)
+	print "now generating RepubliCrat tweet..."
+	myMarkov = Markov(fileRepu,3)
 	genText = myMarkov.generate_text()
-	print genText
+	finalText = myMarkov.ensure_tweet_length(genText)
+
+	print "\n*****\n"
+	print finalText
+	print "\n*****\n"
 
 if __name__ == '__main__':
 	main()
