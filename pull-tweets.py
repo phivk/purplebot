@@ -6,13 +6,17 @@ from twython import Twython
 import pprint
 import HTMLParser
 
+import keywords
+
 #twitter credentials
 API_KEY = 'BoP0mE4gtGZlh1me29lug'
 API_SECRET = 'xteLnU2uu3KEKxZx8hc1wfPic0gs5JvosmRP9VBA6c'
 ACCESS_TOKEN = '2417467056-2aZr2bQSGaDcRnbqR7QAHC95TXXSPbyQr2jONYa'
 ACCESS_TOKEN_SECRET = 'LBKmR3OXxVFiLEM9zeiYNe0tKwUyiFdfmz27ts36AuhHW'
 
-def filter_for_keywords(twTexts, keywords=["CivilRights","Education","Environment","HealthCare","Immigration","Economy","NationalSecurity","Security","OpenGovernment","Taxes","Tax","Government","Democrat","Democrats","Republican","Republicans","Civic"]):
+KEYWORDS = [kw.replace("\n", "") for kw in open('./keywords.txt').readlines()]
+
+def filter_for_keywords(twTexts, keywords=KEYWORDS):
 		return [twText for twText in twTexts if any(kw.lower() in twText.lower() for kw in keywords)]
 
 def main():
