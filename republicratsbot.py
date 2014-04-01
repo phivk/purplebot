@@ -1,6 +1,7 @@
 from markovBot import *
 from twython import Twython
 import re
+import time
 
 API_KEY = 'BoP0mE4gtGZlh1me29lug'
 API_SECRET = 'xteLnU2uu3KEKxZx8hc1wfPic0gs5JvosmRP9VBA6c'
@@ -24,7 +25,7 @@ def concat_symbols(text):
 	text = text.replace("# ", "#")
 	text = text.replace(" :", ":")
 	text = text.replace(" ,", ",")
-	text = text.replace("@ ", "@")
+	# text = text.replace("@ ", "@") # prevent @mentions to prevent suspension!
 	text = text.replace(" '", "'")
 	text = text.replace(" ?", "?")
 	text = text.replace(" !", "!")
@@ -43,18 +44,27 @@ def main():
 
 	print "now generating RepubliCrat tweet..."
 	myMarkov = MarkovBot(combinedText,3)
-	genText = myMarkov.generate_text()
-	sentence = ' '.join(genText)
-	tweetText = myMarkov.ensure_tweet_length(sentence)
-	tagText = concat_symbols(tweetText)
 
-	finalText = tagText
+	while 1:
+		genText = myMarkov.generate_text()
+		sentence = ' '.join(genText)
+		tweetText = myMarkov.ensure_tweet_length(sentence)
+		tagText = concat_symbols(tweetText)
 
-	twitter.update_status(status=finalText)
+		finalText = tagText
 
-	print "\n*****\n"
-	print finalText
-	print "\n*****\n"
+
+		try:
+			twitter.update_status(status=finalText)
+		except Exception, e:
+			raise e
+			# continue
+
+		print "\n*****\n"
+		print finalText
+		print "\n*****\n"
+
+		time.sleep(600)
 
 
 if __name__ == '__main__':
