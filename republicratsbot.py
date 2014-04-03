@@ -2,11 +2,6 @@ from markovBot import *
 from twython import Twython
 import re
 import time
-
-API_KEY = 'BoP0mE4gtGZlh1me29lug'
-API_SECRET = 'xteLnU2uu3KEKxZx8hc1wfPic0gs5JvosmRP9VBA6c'
-ACCESS_TOKEN = '2417467056-2aZr2bQSGaDcRnbqR7QAHC95TXXSPbyQr2jONYa'
-ACCESS_TOKEN_SECRET = 'LBKmR3OXxVFiLEM9zeiYNe0tKwUyiFdfmz27ts36AuhHW'
 import simplejson as json
 
 CORPUS_PATH_DEMOCRAT = './data/corpora/tweets-democratic.txt'
