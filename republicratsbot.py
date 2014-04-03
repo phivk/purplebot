@@ -1,16 +1,59 @@
 from markovBot import *
 from twython import Twython
+import re
+import time
+import random
+import simplejson as json
 
-API_KEY = 'BoP0mE4gtGZlh1me29lug'
-API_SECRET = 'xteLnU2uu3KEKxZx8hc1wfPic0gs5JvosmRP9VBA6c'
-ACCESS_TOKEN = '2417467056-2aZr2bQSGaDcRnbqR7QAHC95TXXSPbyQr2jONYa'
-ACCESS_TOKEN_SECRET = 'LBKmR3OXxVFiLEM9zeiYNe0tKwUyiFdfmz27ts36AuhHW'
-
-CORPUS_PATH_DEMOCRAT = './data/corpora/tweets-democrat.txt'
+CORPUS_PATH_DEMOCRAT = './data/corpora/tweets-democratic.txt'
 CORPUS_PATH_REPUBLICAN = './data/corpora/tweets-republican.txt'
 
+PROB_NO_MINUTES_INTERVAL = 30
+
+def concat_symbols(text):
+	# remove excess symbols from beginning & excess spaces
+	symbolEndSet = [':',';','.',',','?','??','!', "'s"]
+	for s in symbolEndSet:
+		if text[:2] == " "+s:
+			text = text[2:]
+		if text[:2] == s+" ":
+			text = text[2:]
+		text = text.replace(" "+s, s)	
+
+	text = text.replace("# ", "#")
+	# NB leave "@ [handle]" to prevent @mentions that lead to suspension!
+
+	# remove unmatched quotation chars
+	matchSymbols = ['\xe2', "''","``",'"']
+	for s in matchSymbols:
+		if text.count(s) == 1:
+			text = text.replace(s, "")
+
+	# custom replacements
+	replaceSet = {
+		"does n't ": "doesn't ",
+		"do n't": "don't",
+		"ca n't": "can't",
+		" 've ": "'ve ",
+		"??s ": "'s ",
+		"ai n't": "ain't",
+		"were n't": "weren't",
+		"  ": " ",
+	}
+	for chars, replacement in replaceSet.iteritems():
+		text = text.replace(chars, replacement)	
+
+	return text
+
+def get_credentials(filePath):
+	with open(filePath) as f:
+		CREDS = json.load(f)
+	return CREDS
 
 def main():
+	CREDS = get_credentials('./credentials.json')
+	twitter = Twython(CREDS['API_KEY'], CREDS['API_SECRET'], CREDS['ACCESS_TOKEN'], CREDS['ACCESS_TOKEN_SECRET'])
+	
 	rawText1 = open(CORPUS_PATH_REPUBLICAN, 'rb').read()
 	rawText2 = open(CORPUS_PATH_DEMOCRAT, 'rb').read()
 
@@ -20,16 +63,32 @@ def main():
 
 	print "now generating RepubliCrat tweet..."
 	myMarkov = MarkovBot(combinedText,3)
-	genText = myMarkov.generate_text()
-	sentence = ' '.join(genText)
-	finalText = myMarkov.ensure_tweet_length(sentence)
 
-	print "\n*****\n"
-	print finalText
-	print "\n*****\n"
+	while 1:
+		genText = myMarkov.generate_text()
+		sentence = ' '.join(genText)
+		tweetText = myMarkov.ensure_tweet_length(sentence)
+		tagText = concat_symbols(tweetText)
 
-	twitter = Twython(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-	# twitter.update_status(status=finalText)
+		finalText = tagText
+		try:
+			if random.random() < (1.0 / PROB_NO_MINUTES_INTERVAL):
+				twitter.update_status(status=finalText)
+				print "tweet..."
+			else:
+				print "skip..."
+			print "\n*****\n"
+			print finalText
+			print "\n*****\n"
+		except Exception, e:
+			print "\n*****\n"
+			print "Error on text: "
+			print finalText
+			print "\n*****\n"
+			raise e
+			# continue
+		time.sleep(60)
+
 
 if __name__ == '__main__':
 	main()
