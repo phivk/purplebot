@@ -7,6 +7,7 @@ API_KEY = 'BoP0mE4gtGZlh1me29lug'
 API_SECRET = 'xteLnU2uu3KEKxZx8hc1wfPic0gs5JvosmRP9VBA6c'
 ACCESS_TOKEN = '2417467056-2aZr2bQSGaDcRnbqR7QAHC95TXXSPbyQr2jONYa'
 ACCESS_TOKEN_SECRET = 'LBKmR3OXxVFiLEM9zeiYNe0tKwUyiFdfmz27ts36AuhHW'
+import simplejson as json
 
 CORPUS_PATH_DEMOCRAT = './data/corpora/tweets-democratic.txt'
 CORPUS_PATH_REPUBLICAN = './data/corpora/tweets-republican.txt'
@@ -34,7 +35,9 @@ def concat_symbols(text):
 	return text
 
 def main():
-	twitter = Twython(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+	CREDS = get_credentials('./credentials.json')
+	twitter = Twython(CREDS['API_KEY'], CREDS['API_SECRET'], CREDS['ACCESS_TOKEN'], CREDS['ACCESS_TOKEN_SECRET'])
+	
 	rawText1 = open(CORPUS_PATH_REPUBLICAN, 'rb').read()
 	rawText2 = open(CORPUS_PATH_DEMOCRAT, 'rb').read()
 

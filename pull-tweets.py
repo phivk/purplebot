@@ -8,12 +8,6 @@ import re
 
 import keywords
 
-#twitter credentials
-API_KEY = 'BoP0mE4gtGZlh1me29lug'
-API_SECRET = 'xteLnU2uu3KEKxZx8hc1wfPic0gs5JvosmRP9VBA6c'
-ACCESS_TOKEN = '2417467056-2aZr2bQSGaDcRnbqR7QAHC95TXXSPbyQr2jONYa'
-ACCESS_TOKEN_SECRET = 'LBKmR3OXxVFiLEM9zeiYNe0tKwUyiFdfmz27ts36AuhHW'
-
 KEYWORDS = [kw.replace("\n", "") for kw in open('./keywords.txt').readlines()]
 GRUBER_URLINTEXT_PAT = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
 HTTPLEFTOVER_PAT = re.compile('https?\S*')
@@ -34,8 +28,14 @@ def stripURLs(text):
 		text = text.replace(hlo, "")
 	return text
 
+def get_credentials(filePath):
+	with open(filePath) as f:
+		CREDS = json.load(f)
+	return CREDS
+
 def main():
-	twitter = Twython(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+	CREDS = get_credentials('./credentials.json')
+	twitter = Twython(CREDS['API_KEY'], CREDS['API_SECRET'], CREDS['ACCESS_TOKEN'], CREDS['ACCESS_TOKEN_SECRET'])
 
 	# Get Politicians' Twitter Handles
 	apiKey = 'AIzaSyD-mnJ5Gff-xJDpEU78Pc5iXLbMHmK4FPA'
