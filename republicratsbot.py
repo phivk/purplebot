@@ -34,6 +34,11 @@ def concat_symbols(text):
 	text = text.replace("`` ", "``")
 	return text
 
+def get_credentials(filePath):
+	with open(filePath) as f:
+		CREDS = json.load(f)
+	return CREDS
+
 def main():
 	CREDS = get_credentials('./credentials.json')
 	twitter = Twython(CREDS['API_KEY'], CREDS['API_SECRET'], CREDS['ACCESS_TOKEN'], CREDS['ACCESS_TOKEN_SECRET'])
