@@ -10,7 +10,7 @@ http://www.gilesthomas.com/2010/05/generating-political-news-using-nltk/
 import nltk
 import re
 
-class Markov(object):
+class MarkovBot(object):
 	'''Markov class to generate new text from corpus'''
 	def __init__(self, rawText, n):
 		# self.open_file = open_file
@@ -41,29 +41,7 @@ class Markov(object):
 
 	def ensure_tweet_length(self, text):
 		'''Ensure text is within tweet length'''
-		if len(text) <= 140:
-			print "tweet lenght"
+		if len(text) <= 140 and len(text) > 10:
 			return text
 		else:
 			return self.ensure_tweet_length(' '.join(self.generate_text()))
-
-def main():
-	rawText1 = open('./data/corpora/republican.txt', 'rb').read()
-	rawText2 = open('./data/corpora/democrat.txt', 'rb').read()
-
-	# combine texts by summing equal parts
-	minLength = min(len(rawText1), len(rawText2))
-	combinedText = rawText1[:minLength] + rawText2[:minLength]
-
-	print "now generating RepubliCrat tweet..."
-	myMarkov = Markov(combinedText,3)
-	genText = myMarkov.generate_text()
-	sentence = ' '.join(genText)
-	finalText = myMarkov.ensure_tweet_length(sentence)
-
-	print "\n*****\n"
-	print finalText
-	print "\n*****\n"
-
-if __name__ == '__main__':
-	main()
